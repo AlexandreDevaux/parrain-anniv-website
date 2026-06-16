@@ -491,7 +491,7 @@
     [curtainL, curtainR, intro].forEach(el => el && el.remove()); // 3. on retire le rideau
     await wait(500);                       // petit temps pour admirer le hero
     burst(60);
-    const dur = Math.min(11000, Math.max(6500, maxScroll() / 0.42)); // ~420 px/s, vitesse constante
+    const dur = Math.min(13750, Math.max(8125, maxScroll() / 0.336)); // ~336 px/s (-20%), vitesse constante
     await cinematicScroll(dur);            // 4. défilement cinématique fluide
     burst(220, -20);                       // 5. bouquet final
     revealAll();
