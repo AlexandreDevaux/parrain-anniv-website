@@ -47,10 +47,36 @@
   .curtain-title {
     position: fixed; inset: 0; z-index: 10001;
     display: flex; align-items: center; justify-content: center;
-    color: #fff; font-family: 'Fraunces', serif; font-weight: 900;
-    font-size: clamp(1.4rem, 5vw, 2.8rem); text-align: center; padding: 0 1rem;
-    pointer-events: none; text-shadow: 0 6px 26px rgba(0,0,0,.5);
+    color: #fff; text-align: center; padding: 0 1rem;
+    pointer-events: auto; text-shadow: 0 6px 26px rgba(0,0,0,.5);
     transition: opacity .5s ease;
+  }
+  .intro-inner { display: flex; flex-direction: column; align-items: center; gap: 1.6rem; }
+  .intro-lead {
+    font-family: 'Fraunces', serif; font-weight: 900;
+    font-size: clamp(1.4rem, 5vw, 2.6rem); max-width: 16ch; line-height: 1.15;
+  }
+  .start-btn {
+    font-family: 'Inter', sans-serif; font-weight: 700;
+    font-size: clamp(1rem, 2.6vw, 1.25rem);
+    background: var(--or); color: var(--nuit);
+    border: none; border-radius: 100px; padding: 1rem 2.1rem; cursor: pointer;
+    box-shadow: 0 12px 34px rgba(0,0,0,.35); text-shadow: none;
+    transition: transform .18s ease, box-shadow .18s ease;
+    animation: btnPulse 1.8s ease-in-out infinite;
+  }
+  .start-btn:hover { transform: scale(1.06); box-shadow: 0 16px 44px rgba(0,0,0,.45); }
+  .start-btn:active { transform: scale(.97); }
+  @keyframes btnPulse { 0%,100% { box-shadow: 0 12px 34px rgba(0,0,0,.35); } 50% { box-shadow: 0 12px 44px rgba(244,180,0,.55); } }
+  .intro-count {
+    font-family: 'Fraunces', serif; font-weight: 900;
+    font-size: clamp(5rem, 22vw, 12rem); line-height: 1; color: #fff; min-height: 1em;
+  }
+  .intro-count.pop { animation: countPop .6s cubic-bezier(.2,.9,.2,1); }
+  @keyframes countPop {
+    0% { transform: scale(.3); opacity: 0; }
+    40% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
   }
   body.curtain-open .curtain-left  { transform: translateX(-101%); }
   body.curtain-open .curtain-right { transform: translateX(101%); }
@@ -256,7 +282,13 @@
 <!-- RIDEAU CINEMATIQUE -->
 <div class="curtain-left"></div>
 <div class="curtain-right"></div>
-<div class="curtain-title">🎬 Une surprise pour toi…</div>
+<div class="curtain-title">
+  <div class="intro-inner">
+    <p class="intro-lead" id="introLead">🎁 Une surprise t'attend, parrain…</p>
+    <button class="start-btn" id="startBtn">🎬 Je suis prêt — lancer&nbsp;!</button>
+    <div class="intro-count" id="countNum" aria-hidden="true"></div>
+  </div>
+</div>
 
 <!-- HERO -->
 <header class="hero">
@@ -427,7 +459,32 @@
   const curtainL = document.querySelector('.curtain-left');
   const curtainR = document.querySelector('.curtain-right');
   const intro = document.querySelector('.curtain-title');
+  const startBtn = document.getElementById('startBtn');
+  const introLead = document.getElementById('introLead');
+  const countNum = document.getElementById('countNum');
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+  // Attend le clic sur "Je suis prêt"
+  function waitForStart() {
+    return new Promise(res => {
+      if (!startBtn) return res();
+      startBtn.addEventListener('click', res, { once: true });
+    });
+  }
+  // Decompte 3 - 2 - 1 - 🎉
+  function showCount(txt) {
+    if (!countNum) return;
+    countNum.textContent = txt;
+    countNum.classList.remove('pop');
+    void countNum.offsetWidth; // relance l'animation
+    countNum.classList.add('pop');
+  }
+  async function countdown() {
+    if (introLead) introLead.style.display = 'none';
+    if (startBtn) startBtn.style.display = 'none';
+    for (const n of ['3', '2', '1']) { showCount(n); await wait(800); }
+    showCount('🎉'); await wait(450);
+  }
 
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const burst = (n, y) => { if (window.__confetti) window.__confetti(n, y); };
@@ -484,7 +541,8 @@
     }
     engageLock();
     window.scrollTo(0, 0);
-    await wait(3000);                      // rideau ferme un peu plus longtemps : on s'assure que tout est pret
+    await waitForStart();                  // on attend qu'il clique "Je suis pret"
+    await countdown();                     // decompte 3 - 2 - 1 - 🎉
     body.classList.add('curtain-open');   // 1. ouverture du rideau (transition 1.9s)
     await wait(750);
     burst(180);                            // 2. salve de confettis pendant l'ouverture
