@@ -389,6 +389,35 @@
   if (btn) btn.addEventListener('click', () => spawn(220, -20));
 })();
 
+/* ===== DEFILEMENT AUTOMATIQUE ===== */
+(function () {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const SPEED = 0.6;          // pixels par frame (doux)
+  const START_DELAY = 3000;   // laisse admirer le hero
+  let active = false, raf = null;
+
+  function maxScroll() { return document.body.scrollHeight - window.innerHeight; }
+
+  function step() {
+    if (!active) return;
+    window.scrollBy(0, SPEED);
+    if (window.scrollY >= maxScroll() - 1) { stop(); return; }
+    raf = requestAnimationFrame(step);
+  }
+  function start() { if (active) return; active = true; step(); }
+  function stop() { active = false; if (raf) cancelAnimationFrame(raf); }
+
+  // L'utilisateur reprend la main au moindre geste
+  ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(ev =>
+    window.addEventListener(ev, stop, { passive: true }));
+
+  // Bouton confettis : on relance un petit tour après le clic
+  const btn = document.getElementById('boom');
+  if (btn) btn.addEventListener('click', () => { stop(); window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(start, 1200); });
+
+  setTimeout(start, START_DELAY);
+})();
+
 /* ===== REVEAL ON SCROLL ===== */
 (function () {
   const obs = new IntersectionObserver((entries) => {
