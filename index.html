@@ -483,7 +483,7 @@
     }
     engageLock();
     window.scrollTo(0, 0);
-    await wait(500);
+    await wait(3000);                      // rideau ferme un peu plus longtemps : on s'assure que tout est pret
     body.classList.add('curtain-open');   // 1. ouverture du rideau (transition 1.9s)
     await wait(750);
     burst(180);                            // 2. salve de confettis pendant l'ouverture
