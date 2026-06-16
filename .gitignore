@@ -1,2 +1,6 @@
 .vercel
 .env*
+.omc/
+.claude/
+node_modules/
+*.log
