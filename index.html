@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Joyeux Anniversaire Eric ! 🎉</title>
+<meta name="description" content="Un petit site pour célébrer l'anniversaire d'Eric Viau — un parcours, une carrière, un parrain en or." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --vert: #00843d;
+    --vert-clair: #2bb673;
+    --vert-fonce: #045c2c;
+    --or: #f4b400;
+    --nuit: #0c1f17;
+    --creme: #f6f9f4;
+    --gris: #5a6b62;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--nuit);
+    background: var(--creme);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; line-height: 1.1; }
+
+  /* ===== CONFETTI CANVAS ===== */
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+
+  /* ===== HERO ===== */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background:
+      radial-gradient(1200px 600px at 50% -10%, rgba(43,182,115,.35), transparent 60%),
+      linear-gradient(160deg, var(--vert-fonce), var(--vert) 55%, var(--vert-clair));
+    color: #fff;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: .5;
+  }
+  .hero > * { position: relative; z-index: 2; }
+  .kicker {
+    text-transform: uppercase;
+    letter-spacing: .35em;
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--or);
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.8rem, 9vw, 6.5rem);
+    font-weight: 900;
+    margin-bottom: .5rem;
+    text-shadow: 0 4px 30px rgba(0,0,0,.25);
+  }
+  .hero .name {
+    font-size: clamp(1.3rem, 4vw, 2.2rem);
+    font-weight: 600;
+    opacity: .95;
+    margin-bottom: 1.5rem;
+  }
+  .hero .tagline {
+    max-width: 620px;
+    font-size: clamp(1rem, 2.2vw, 1.2rem);
+    opacity: .9;
+    margin: 0 auto 2.5rem;
+  }
+  .age-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    backdrop-filter: blur(6px);
+    padding: .7rem 1.4rem;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .scroll-hint {
+    position: absolute;
+    bottom: 1.6rem; left: 50%;
+    transform: translateX(-50%);
+    font-size: .8rem;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    opacity: .7;
+    animation: bob 2s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100%{transform:translate(-50%,0)} 50%{transform:translate(-50%,8px)} }
+
+  /* ===== SECTIONS ===== */
+  section.block { padding: clamp(3.5rem, 9vw, 7rem) 1.5rem; }
+  .wrap { max-width: 1000px; margin: 0 auto; }
+  .section-title {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: .6rem;
+    color: var(--vert-fonce);
+  }
+  .section-sub {
+    text-align: center;
+    color: var(--gris);
+    max-width: 560px;
+    margin: 0 auto 3rem;
+  }
+
+  /* ===== STATS ===== */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.2rem; }
+  .stat {
+    background: #fff;
+    border-radius: 18px;
+    padding: 1.8rem 1.2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(4,92,44,.07);
+    border: 1px solid rgba(0,132,61,.08);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .stat:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(4,92,44,.14); }
+  .stat .num { font-family: 'Fraunces', serif; font-size: 2.4rem; font-weight: 900; color: var(--vert); }
+  .stat .lbl { font-size: .85rem; color: var(--gris); margin-top: .3rem; }
+
+  /* ===== TIMELINE ===== */
+  .timeline { position: relative; max-width: 760px; margin: 0 auto; }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 18px; top: 8px; bottom: 8px;
+    width: 3px;
+    background: linear-gradient(var(--vert-clair), var(--vert-fonce));
+    border-radius: 3px;
+  }
+  .tl-item { position: relative; padding: 0 0 2.2rem 3.4rem; }
+  .tl-item::before {
+    content: "";
+    position: absolute;
+    left: 9px; top: 4px;
+    width: 21px; height: 21px;
+    background: #fff;
+    border: 4px solid var(--vert);
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(0,132,61,.12);
+  }
+  .tl-item .when { font-size: .8rem; font-weight: 700; color: var(--or); text-transform: uppercase; letter-spacing: .08em; }
+  .tl-item h3 { font-size: 1.25rem; margin: .15rem 0 .15rem; color: var(--nuit); }
+  .tl-item .org { font-weight: 600; color: var(--vert); }
+  .tl-item p { color: var(--gris); font-size: .95rem; margin-top: .3rem; }
+
+  /* ===== QUOTES ===== */
+  .quotes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .quote {
+    background: #fff;
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(4,92,44,.07);
+    border-left: 5px solid var(--or);
+  }
+  .quote p { font-style: italic; color: #2c382f; margin-bottom: 1rem; }
+  .quote .by { font-weight: 700; color: var(--vert-fonce); font-size: .95rem; }
+  .quote .role { font-size: .82rem; color: var(--gris); }
+
+  /* ===== FOOTER / MESSAGE ===== */
+  .finale {
+    background: linear-gradient(160deg, var(--nuit), var(--vert-fonce));
+    color: #fff;
+    text-align: center;
+  }
+  .finale h2 { font-size: clamp(2rem, 6vw, 3.4rem); margin-bottom: 1.2rem; }
+  .finale p { max-width: 600px; margin: 0 auto 1rem; opacity: .9; }
+  .finale .cake { font-size: 4rem; margin-bottom: 1rem; display: block; }
+  .signature { margin-top: 2rem; font-family: 'Fraunces', serif; font-style: italic; opacity: .8; }
+  .cta {
+    display: inline-block;
+    margin-top: 2rem;
+    background: var(--or);
+    color: var(--nuit);
+    font-weight: 700;
+    padding: .9rem 1.8rem;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: transform .2s ease;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+  }
+  .cta:hover { transform: scale(1.05); }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="kicker">16 Juin · C'est ton jour</div>
+  <h1>Joyeux Anniversaire</h1>
+  <div class="name">Eric Viau 🥂</div>
+  <p class="tagline">
+    Directeur National des Réseaux Feu Vert · Expert Mobilité &amp; Aftermarket.
+    Un parrain au parcours en or — aujourd'hui, c'est nous qui te mettons à l'honneur.
+  </p>
+  <span class="age-badge">🎂 Une nouvelle année, un nouveau cap</span>
+  <div class="scroll-hint">défile ↓</div>
+</header>
+
+<!-- STATS -->
+<section class="block">
+  <div class="wrap">
+    <h2 class="section-title reveal">Une carrière en chiffres</h2>
+    <p class="section-sub reveal">Parce qu'un parcours pareil, ça se célèbre.</p>
+    <div class="stats">
+      <div class="stat reveal"><div class="num">350+</div><div class="lbl">centres pilotés en France</div></div>
+      <div class="stat reveal"><div class="num">2 500</div><div class="lbl">collaborateurs</div></div>
+      <div class="stat reveal"><div class="num">700 M€</div><div class="lbl">de chiffre d'affaires</div></div>
+      <div class="stat reveal"><div class="num">16</div><div class="lbl">Directeurs Régionaux</div></div>
+      <div class="stat reveal"><div class="num">25+</div><div class="lbl">années de leadership</div></div>
+      <div class="stat reveal"><div class="num">3</div><div class="lbl">pays : France, Espagne, Maroc</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<section class="block" style="background:#eef5ec;">
+  <div class="wrap">
+    <h2 class="section-title reveal">Le parcours d'un grand</h2>
+    <p class="section-sub reveal">De Danone à la tête des réseaux Feu Vert.</p>
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="when">2024 → Aujourd'hui</div>
+        <h3>Directeur National des Réseaux</h3>
+        <div class="org">Feu Vert France</div>
+        <p>Pilotage des 3 réseaux de distribution (succursales, franchises, master franchises — DROMCOM, Maroc), 350+ centres et 2 500 collaborateurs.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="when">2021 → 2023</div>
+        <h3>Directeur Marketing, Communication &amp; Digital</h3>
+        <div class="org">Feu Vert España · Madrid</div>
+        <p>Transformation omnicanale de Feu Vert Ibérica : 90 centres, 130 M€ de CA, 1 600 collaborateurs.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="when">2019 → 2023</div>
+        <h3>Directeur National Réseau Succursales</h3>
+        <div class="org">Feu Vert France</div>
+        <p>Maintenance, outillage et actifs immobiliers. Le terrain, toujours le terrain.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="when">2012 → 2021</div>
+        <h3>Dirigeant Unité de Transport Bus</h3>
+        <div class="org">Keolis Lyon</div>
+        <p>20 % des lignes de l'agglo lyonnaise, 500 personnes, 24 millions de voyageurs par an.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="when">2003 → 2012</div>
+        <h3>Dirigeant &amp; Directeur Adjoint</h3>
+        <div class="org">SNCF</div>
+        <p>Management d'établissements de plusieurs centaines d'agents, exigences de coûts, qualité, délais et sécurité ferroviaire.</p>
+      </div>
+      <div class="tl-item reveal">
+        <div class="when">1991 → 1995</div>
+        <h3>ESC Clermont-Ferrand</h3>
+        <div class="org">Clermont School of Business</div>
+        <p>Management, plus un Mastère en Gestion à San Sebastian. La passion de l'Espagne, déjà.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTES -->
+<section class="block">
+  <div class="wrap">
+    <h2 class="section-title reveal">Ce qu'on dit de lui</h2>
+    <p class="section-sub reveal">Et ils ont bien raison.</p>
+    <div class="quotes">
+      <div class="quote reveal">
+        <p>« Un manager bienveillant et exigeant, au leadership reconnu de tous. Il conjugue brillamment vision, action et réussite ! Son optimisme et sa facilité à trouver des solutions sont de vrais atouts. »</p>
+        <div class="by">Nathalie Breton</div>
+        <div class="role">Group HR &amp; Legal Director · 15 ans à ses côtés</div>
+      </div>
+      <div class="quote reveal">
+        <p>« Grand professionnel, à l'aise tant sur l'opérationnel que sur le stratégique. Vision, business, et très agréable en transverse… »</p>
+        <div class="by">Damien Louisgrand</div>
+        <div class="role">Directeur Commercial · Membre du Comex</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINALE -->
+<section class="block finale">
+  <div class="wrap">
+    <span class="cake">🎂</span>
+    <h2 class="reveal">Joyeux anniversaire, parrain !</h2>
+    <p class="reveal">Directeur de réseaux, expert de la mobilité, meneur d'hommes… mais avant tout, un parrain en or.</p>
+    <p class="reveal">Merci pour ton exemple, ton énergie et ta bienveillance. On te souhaite une année à la hauteur de ton parcours : pleine de réussites, de belles routes et de bons moments.</p>
+    <button class="cta" id="boom">🎉 Lancer les confettis 🎉</button>
+    <div class="signature reveal">— Avec toute notre affection 💚</div>
+  </div>
+</section>
+
+<script>
+/* ===== CONFETTI ENGINE ===== */
+(function () {
+  const canvas = document.getElementById('confetti');
+  const ctx = canvas.getContext('2d');
+  let W, H, pieces = [];
+  const colors = ['#00843d', '#2bb673', '#f4b400', '#ffffff', '#045c2c', '#ffd966'];
+
+  function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+  resize();
+  addEventListener('resize', resize);
+
+  function spawn(n, originY) {
+    for (let i = 0; i < n; i++) {
+      pieces.push({
+        x: Math.random() * W,
+        y: originY !== undefined ? originY : -20 - Math.random() * H * 0.3,
+        r: 4 + Math.random() * 7,
+        c: colors[(Math.random() * colors.length) | 0],
+        vx: -2 + Math.random() * 4,
+        vy: 2 + Math.random() * 4,
+        rot: Math.random() * 6.28,
+        vr: -0.2 + Math.random() * 0.4,
+        shape: Math.random() > 0.5 ? 'rect' : 'circ'
+      });
+    }
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    for (let i = pieces.length - 1; i >= 0; i--) {
+      const p = pieces[i];
+      p.x += p.vx; p.y += p.vy; p.vy += 0.05; p.rot += p.vr;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = p.c;
+      if (p.shape === 'rect') ctx.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 1.6);
+      else { ctx.beginPath(); ctx.arc(0, 0, p.r / 1.6, 0, 6.28); ctx.fill(); }
+      ctx.restore();
+      if (p.y > H + 30) pieces.splice(i, 1);
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+
+  // initial celebration burst
+  spawn(160);
+  // button burst
+  const btn = document.getElementById('boom');
+  if (btn) btn.addEventListener('click', () => spawn(220, -20));
+})();
+
+/* ===== REVEAL ON SCROLL ===== */
+(function () {
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+})();
+</script>
+</body>
+</html>
