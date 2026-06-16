@@ -57,6 +57,17 @@
     opacity: .5;
   }
   .hero > * { position: relative; z-index: 2; }
+  .avatar {
+    width: clamp(120px, 28vw, 168px);
+    height: clamp(120px, 28vw, 168px);
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid rgba(255,255,255,.85);
+    box-shadow: 0 12px 40px rgba(0,0,0,.35);
+    margin-bottom: 1.6rem;
+    animation: pop .8s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .kicker {
     text-transform: uppercase;
     letter-spacing: .35em;
@@ -219,14 +230,15 @@
 
 <!-- HERO -->
 <header class="hero">
+  <img class="avatar" src="eric.png" alt="Eric Viau" />
   <div class="kicker">16 Juin · C'est ton jour</div>
   <h1>Joyeux Anniversaire</h1>
-  <div class="name">Eric Viau 🥂</div>
+  <div class="name">Eric Viau · 53 ans 🥂</div>
   <p class="tagline">
     Directeur National des Réseaux Feu Vert · Expert Mobilité &amp; Aftermarket.
     Un parrain au parcours en or — aujourd'hui, c'est nous qui te mettons à l'honneur.
   </p>
-  <span class="age-badge">🎂 Une nouvelle année, un nouveau cap</span>
+  <span class="age-badge">🎂 53 ans aujourd'hui — et un nouveau cap</span>
   <div class="scroll-hint">défile ↓</div>
 </header>
 
